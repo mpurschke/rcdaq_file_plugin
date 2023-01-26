@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include <daq_device_dam.h>
+#include <daq_device_mvtx_file.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -21,7 +21,7 @@ using namespace std;
 int readn (int fd, char *ptr, const int nbytes);
 
 
-daq_device_dam::daq_device_dam(const int eventtype
+daq_device_mvtx_file::daq_device_mvtx_file(const int eventtype
 			       , const int subeventid
 			       , const int trigger
 			       , const int nunits
@@ -49,7 +49,7 @@ daq_device_dam::daq_device_dam(const int eventtype
   if ( _trigger )
     {
       //  cout << __LINE__ << "  " << __FILE__ << " registering triggerhandler " << endl;
-      _th  = new damTriggerHandler (m_eventType);
+      _th  = new mvtx_fileTriggerHandler (m_eventType);
       
       registerTriggerHandler ( _th);
 
@@ -63,7 +63,7 @@ daq_device_dam::daq_device_dam(const int eventtype
   
 }
 
-daq_device_dam::~daq_device_dam()
+daq_device_mvtx_file::~daq_device_mvtx_file()
 {
 
   if (_th)
@@ -75,7 +75,7 @@ daq_device_dam::~daq_device_dam()
 }
 
 
-int  daq_device_dam::init()
+int  daq_device_mvtx_file::init()
 {
 
   if ( _broken ) 
@@ -86,10 +86,10 @@ int  daq_device_dam::init()
     }
 
   _broken = 0;
-  //  _dam_fd = open("/mac_home/data/TPC_SBU/S06_R1_205657.bin", O_RDONLY);
-    _dam_fd = open("S06_R2_163117.bin", O_RDONLY);
+  //  _mvtx_file_fd = open("/mac_home/data/TPC_SBU/S06_R1_205657.bin", O_RDONLY);
+    _mvtx_file_fd = open("S06_R2_163117.bin", O_RDONLY);
 
-  if ( _dam_fd < 0)
+  if ( _mvtx_file_fd < 0)
     {
       _broken = 1;
       return -1;
@@ -98,7 +98,7 @@ int  daq_device_dam::init()
   
   if ( _trigger )
     {
-      _th->set_damfd( _dam_fd);
+      _th->set_mvtx_filefd( _mvtx_file_fd);
     }
 
   return 0;
@@ -107,7 +107,7 @@ int  daq_device_dam::init()
 
 // the put_data function
 
-int daq_device_dam::put_data(const int etype, int * adr, const int length )
+int daq_device_mvtx_file::put_data(const int etype, int * adr, const int length )
 {
 
   if ( _broken ) 
@@ -150,7 +150,7 @@ int daq_device_dam::put_data(const int etype, int * adr, const int length )
 
       int ret;
   
-      ret = read(_dam_fd, dest, _length);
+      ret = read(_mvtx_file_fd, dest, _length);
 
       cout << __LINE__ << "  " << __FILE__ << " read  "  << ret << " words " << endl;
 
@@ -166,7 +166,7 @@ int daq_device_dam::put_data(const int etype, int * adr, const int length )
 }
 
   
-void daq_device_dam::identify(std::ostream& os) const
+void daq_device_mvtx_file::identify(std::ostream& os) const
 {
   if ( _broken) 
     {
@@ -188,7 +188,7 @@ void daq_device_dam::identify(std::ostream& os) const
     }
 }
 
-int daq_device_dam::max_length(const int etype) const
+int daq_device_mvtx_file::max_length(const int etype) const
 {
   if (etype != m_eventType) return 0;
   return  ( _npackets * _nunits * DATA_LENGTH + _npackets *SEVTHEADERLENGTH);
@@ -197,19 +197,19 @@ int daq_device_dam::max_length(const int etype) const
 
 
 // the rearm() function
-int  daq_device_dam::rearm(const int etype)
+int  daq_device_mvtx_file::rearm(const int etype)
 {
   return 0;
 }
 
-int daq_device_dam::endrun() 
+int daq_device_mvtx_file::endrun() 
 {
   
-  // unsigned int trig = pl_register_read(_dam_fd, FEE_SAMPA_CTRL);
+  // unsigned int trig = pl_register_read(_mvtx_file_fd, FEE_SAMPA_CTRL);
   // trig &= 0xf;
-  // pl_register_write(_dam_fd, FEE_SAMPA_CTRL, trig);
+  // pl_register_write(_mvtx_file_fd, FEE_SAMPA_CTRL, trig);
   
-  close (_dam_fd);
+  close (_mvtx_file_fd);
   
   return 0;
 }

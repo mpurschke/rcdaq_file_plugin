@@ -1,25 +1,24 @@
-#ifndef __DAQ_DEVICE_DAM__
-#define __DAQ_DEVICE_DAM__
+#ifndef __DAQ_DEVICE_MVTX_FILE__
+#define __DAQ_DEVICE_MVTX_FILE__
 
 
 #include <daq_device.h>
 #include <stdio.h>
-#include <damTriggerHandler.h>
+#include <mvtx_fileTriggerHandler.h>
 
 //class Fee;
 
-class daq_device_dam: public  daq_device {
+class daq_device_mvtx_file: public  daq_device {
 
 
 public:
 
-  daq_device_dam(const int eventtype
+  daq_device_mvtx_file(const int eventtype
 		 , const int subeventid
-		 , const int trigger = 1
-		 , const int nunits=1
-		 , const int npackets=1);
+		 , const int trigger = 1);
 
-  ~daq_device_dam();
+
+  ~daq_device_mvtx_file();
 
 
   void identify(std::ostream& os = std::cout) const;
@@ -39,17 +38,15 @@ public:
   
  protected:
 
-  int _dam_fd;
+  int _mvtx_fd;
   
   int _broken;
 
   int _trigger;
 
   int _length;
-  int _nunits;
-  int _npackets;
   
-  damTriggerHandler *_th;
+  mvtx_fileTriggerHandler *_th;
 
 
 };

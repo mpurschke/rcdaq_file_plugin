@@ -1,13 +1,13 @@
-#include "dam_plugin.h"
+#include "mvtx_file_plugin.h"
 
 #include "parseargument.h"
 
-#include <daq_device_dam.h>
+#include <daq_device_mvtx_file.h>
 
 
 #include <strings.h>
 
-int dam_plugin::create_device(deviceblock *db)
+int mvtx_file_plugin::create_device(deviceblock *db)
 {
 
   //  std::cout << __LINE__ << "  " << __FILE__ << "  " << db->argv0 << "  " << db->npar << std::endl;
@@ -15,7 +15,7 @@ int dam_plugin::create_device(deviceblock *db)
   int eventtype;
   int subid;
 
-  if ( strcasecmp(db->argv0,"device_dam") == 0 ) 
+  if ( strcasecmp(db->argv0,"device_mvtx_file") == 0 ) 
     {
       // we need at least 2 params
       if ( db->npar <3 ) return 1; // indicate wrong params
@@ -25,7 +25,7 @@ int dam_plugin::create_device(deviceblock *db)
 
       if ( db->npar == 3)
 	{
-	  add_readoutdevice ( new daq_device_dam( eventtype,
+	  add_readoutdevice ( new daq_device_mvtx_file( eventtype,
 						  subid ));
 	  return 0;  // say "we handled this request" 
 	}
@@ -34,7 +34,7 @@ int dam_plugin::create_device(deviceblock *db)
 	{
 	  int trigger = get_value ( db->argv3);
 
-	  add_readoutdevice ( new daq_device_dam( eventtype,
+	  add_readoutdevice ( new daq_device_mvtx_file( eventtype,
 						  subid,
 						  trigger ));
 	  return 0;  // say "we handled this request" 
@@ -45,7 +45,7 @@ int dam_plugin::create_device(deviceblock *db)
 	  int trigger = get_value ( db->argv3);
 	  int nunits = get_value ( db->argv4);
 
-	  add_readoutdevice ( new daq_device_dam( eventtype,
+	  add_readoutdevice ( new daq_device_mvtx_file( eventtype,
 						  subid,
 						  trigger,
 						  nunits));
@@ -58,7 +58,7 @@ int dam_plugin::create_device(deviceblock *db)
 	  int nunits = get_value ( db->argv4);
 	  int npackets = get_value ( db->argv5);
 
-	  add_readoutdevice ( new daq_device_dam( eventtype,
+	  add_readoutdevice ( new daq_device_mvtx_file( eventtype,
 						  subid,
 						  trigger,
 						  nunits,
@@ -77,7 +77,7 @@ int dam_plugin::create_device(deviceblock *db)
 
 }
 
-void dam_plugin::identify(std::ostream& os, const int flag) const
+void mvtx_file_plugin::identify(std::ostream& os, const int flag) const
 {
 
   if ( flag <=2 )
@@ -87,11 +87,11 @@ void dam_plugin::identify(std::ostream& os, const int flag) const
   else
     {
       os << " - DAM Plugin, provides - " << std::endl;
-      os << " -     device_dam (evttype, subid [, npackets, trigger] ) - DAM FELIX Board " << std::endl;
+      os << " -     device_mvtx_file (evttype, subid [, npackets, trigger] ) - DAM FELIX Board " << std::endl;
     }
       
 
 }
 
 
-dam_plugin _damp;
+mvtx_file_plugin _mvtx_filep;

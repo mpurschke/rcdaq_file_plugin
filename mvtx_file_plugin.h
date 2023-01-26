@@ -6,7 +6,7 @@
 #include <iostream>
 
 
-class dam_plugin : public RCDAQPlugin {
+class mvtx_file_plugin : public RCDAQPlugin {
 
  public:
   int  create_device(deviceblock *db);

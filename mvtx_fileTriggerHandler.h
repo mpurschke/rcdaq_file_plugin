@@ -1,22 +1,22 @@
-#ifndef __DAMTRIGGERHANDLER_H__
-#define __DAMTRIGGERHANDLER_H__
+#ifndef __MVTX_FILETRIGGERHANDLER_H__
+#define __MVTX_FILETRIGGERHANDLER_H__
 
 #include "TriggerHandler.h"
 
 
-class damTriggerHandler : public TriggerHandler {
+class mvtx_fileTriggerHandler : public TriggerHandler {
 
 public:
 
-  damTriggerHandler(const int etype)
+  mvtx_fileTriggerHandler(const int etype)
     {
       _etype = etype;
       _poll_count = 0;
     };
 
-  ~damTriggerHandler() {};
+  ~mvtx_fileTriggerHandler() {};
 
-  int set_damfd ( const int dam_fd);
+  int set_mvtx_filefd ( const int mvtx_file_fd);
   //  int set_selftrigger(const int sleepinterval) { _self_trigger = sleepinterval;};
 
   int enable();
@@ -26,7 +26,7 @@ public:
 
  protected:
   
-  int _dam_fd;
+  int _mvtx_file_fd;
   int _etype;
   int _poll_count;
 };
