@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <damTriggerHandler.h>
 
-class Fee;
+//class Fee;
 
 class daq_device_dam: public  daq_device {
 

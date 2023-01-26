@@ -8,10 +8,7 @@
 #include <stdint.h>
 #include <fcntl.h>
 
-#include "pl_lib.h"
-//#include "fee_reg.h"
-
-#define DATA_LENGTH          137*256 // 137 words * 256 channels
+#define DATA_LENGTH          256*128*100 
 #define FEE_SAMPA_CTRL       0x5
 #define DAM_DMA_FIFO         0x5
 #define DAM_DMA_CTRL         0x4004
@@ -89,7 +86,8 @@ int  daq_device_dam::init()
     }
 
   _broken = 0;
-  pl_open(&_dam_fd);
+  //  _dam_fd = open("/mac_home/data/TPC_SBU/S06_R1_205657.bin", O_RDONLY);
+    _dam_fd = open("S06_R2_163117.bin", O_RDONLY);
 
   if ( _dam_fd < 0)
     {
@@ -97,39 +95,11 @@ int  daq_device_dam::init()
       return -1;
     }
 
-  // int ret = fcntl(_dam_fd, F_SETFL, fcntl(_dam_fd, F_GETFL, 0) | O_NONBLOCK);
-  // if (ret < 0)
-  //   {
-  //     perror("fcntl");
-  //     _broken = ret;
-  //     return -1;
-  //   }
-
-
   
   if ( _trigger )
     {
       _th->set_damfd( _dam_fd);
     }
-
-  // // Disable DMA engine
-  // pl_register_write(_dam_fd, DAM_DMA_CTRL, 0x0);
-  
-  // // Reset FEE FIFOs
-  // pl_register_write(_dam_fd, 0x24, 0xf);
-  
-  // dam_reset_dma_engine(_dam_fd);
-  
-  // // Set burst length
-  // pl_register_write(_dam_fd, DAM_DMA_BURST_LENGTH, DATA_LENGTH);
-  // size_t len = pl_register_read(_dam_fd, DAM_DMA_BURST_LENGTH);
-  
-  // // Enable DMA engine
-  // pl_register_write(_dam_fd, DAM_DMA_CTRL, 1 << 3 | 1 << 1);
-
-
-  // // Take FEE FIFOs out of reset
-  // pl_register_write(_dam_fd, 0x24, 0x0);
 
   return 0;
 
@@ -171,7 +141,7 @@ int daq_device_dam::put_data(const int etype, int * adr, const int length )
       // update id's etc
       sevt->sub_id = ipacket;
       sevt->sub_type=2;
-      sevt->sub_decoding = 99; 
+      sevt->sub_decoding = 120;  //IDTPCFEEV3
       sevt->reserved[0] = 0;
       sevt->reserved[1] = 0;
 
@@ -182,12 +152,13 @@ int daq_device_dam::put_data(const int etype, int * adr, const int length )
   
       ret = read(_dam_fd, dest, _length);
 
-      //cout << __LINE__ << "  " << __FILE__ << " read  "  << ret << " words " << endl;
-      
+      cout << __LINE__ << "  " << __FILE__ << " read  "  << ret << " words " << endl;
+
+      if (ret <= 0) return 0;
       //      sevt->sub_padding = ret%2 ;
       sevt->sub_padding = 0;  // we can never have an odd number of uint16s
   
-      sevt->sub_length += (ret + sevt->sub_padding);
+      sevt->sub_length += (ret/4 + sevt->sub_padding);
       // cout << __LINE__ << "  " << __FILE__ << " returning "  << sevt->sub_length << endl;
       overall_length += sevt->sub_length;
     }
