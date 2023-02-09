@@ -38,7 +38,7 @@ public:
   
  protected:
 
-  int _mvtx_fd;
+  int _mvtx_file_fd;
   
   int _broken;
 

@@ -40,32 +40,6 @@ int mvtx_file_plugin::create_device(deviceblock *db)
 	  return 0;  // say "we handled this request" 
 	}
 
-      else if ( db->npar == 5)
-	{
-	  int trigger = get_value ( db->argv3);
-	  int nunits = get_value ( db->argv4);
-
-	  add_readoutdevice ( new daq_device_mvtx_file( eventtype,
-						  subid,
-						  trigger,
-						  nunits));
-	  return 0;  // say "we handled this request" 
-	}
-
-      else if ( db->npar == 6)
-	{
-	  int trigger = get_value ( db->argv3);
-	  int nunits = get_value ( db->argv4);
-	  int npackets = get_value ( db->argv5);
-
-	  add_readoutdevice ( new daq_device_mvtx_file( eventtype,
-						  subid,
-						  trigger,
-						  nunits,
-						  npackets));
-	  return 0;  // say "we handled this request" 
-	}
-
       else
 	{
 	  return 1; // say it is our device but the parameters are wrong 
@@ -82,12 +56,12 @@ void mvtx_file_plugin::identify(std::ostream& os, const int flag) const
 
   if ( flag <=2 )
     {
-      os << " - DAM Plugin" << std::endl;
+      os << " - MVTX file reader Plugin" << std::endl;
     }
   else
     {
-      os << " - DAM Plugin, provides - " << std::endl;
-      os << " -     device_mvtx_file (evttype, subid [, npackets, trigger] ) - DAM FELIX Board " << std::endl;
+      os << " - MVTX file reader  Plugin, provides - " << std::endl;
+      os << " -     device_mvtx_file (evttype, subid  ) - MVTX flat file converter" << std::endl;
     }
       
 

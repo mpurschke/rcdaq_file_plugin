@@ -12,7 +12,7 @@ lib_LTLIBRARIES =  librcdaqplugin_mvtx_file.la
 
 
 
-librcdaqplugin_dam_la_SOURCES = \
+librcdaqplugin_mvtx_file_la_SOURCES = \
 	daq_device_mvtx_file.cc \
 	mvtx_fileTriggerHandler.cc \
 	mvtx_file_plugin.cc
